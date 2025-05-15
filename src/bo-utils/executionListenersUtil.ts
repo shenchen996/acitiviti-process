@@ -138,12 +138,12 @@ function updateListenerProperty(
       const fieldElement = moddle!.create(`${prefix}:Field`, {
         name: field.name
       });
-      console.log(moddle!.getTypeDescriptor(`${prefix}:${field.type}`)); // 输出类型描述
-      const stringElement = moddle!.create(`${prefix}:${field.type}`, {
+      const stringElement = ['1'].map(i=>{ return moddle!.create(`${prefix}:${field.type}`, {
         value: field[field.type]
-      });
+      })
+    })
 
-      fieldElement[field.type] = stringElement;
+      fieldElement.set('fields', stringElement)
 
       return fieldElement;
     });

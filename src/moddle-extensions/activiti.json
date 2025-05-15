@@ -690,7 +690,18 @@
         {
           "name": "string",
           "type": "String"
+        },{
+          "name": "fields",
+          "type": "Field",
+          "isMany": true
         }
+      ]
+    },
+    {
+      "name": "String",
+      "superClass": ["Element"],
+      "properties": [
+        { "name": "value", "type": "String", "isAttr": true }
       ]
     },
     {

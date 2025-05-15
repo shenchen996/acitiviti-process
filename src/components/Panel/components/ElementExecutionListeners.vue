@@ -313,7 +313,7 @@
         // 重置字段表单
         newField.value = {
           name: '',
-          type: 'string',
+          type: 'String',
           value: ''
         };
         addFieldModalVisible.value = true;

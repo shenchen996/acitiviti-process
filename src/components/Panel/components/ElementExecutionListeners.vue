@@ -200,13 +200,12 @@
         event: '',
         type: 'class',
         fields: [] // 初始化字段数组
-         })
+      })
       const formRef = ref<FormInst | null>(null)
       const formItemVisible = ref<FormItemVisible>({
         listenerType: 'class',
         scriptType: 'none'
       })
-
 
       // 新增：字段添加相关状态
       const addFieldModalVisible = ref(false);
@@ -247,10 +246,11 @@
         event: { required: true, trigger: ['blur', 'change'], message: '事件类型不能为空' },
         type: { required: true, trigger: ['blur', 'change'], message: '监听器类型不能为空' }
       }
+
       const columns: ComputedRef<DataTableColumns<ExecutionListenerForm>> = computed(() => [
         { title: t('panel.index'), key: 'index', render: (a, index) => index + 1, width: 60 },
-        { title: 'EventType', key: 'event', ellipsis: { tooltip: true } },
-        { title: 'ListenerType', key: 'type', ellipsis: { tooltip: true } },
+        { title: '时间类型', key: 'event', ellipsis: { tooltip: true } },
+        { title: '监听器类型', key: 'type', ellipsis: { tooltip: true } },
         {
           title: t('panel.operations'),
           key: 'operation',
@@ -285,7 +285,24 @@
       const fieldColumns: DataTableColumns<BpmnField> = [
         { title: t('panel.fieldName'), key: 'name' },
         { title: t('panel.fieldType'), key: 'type' },
-        { title: t('panel.fieldValue'), key: 'value' },
+        {
+          title: t('panel.fieldValue'),
+          key: 'value',
+          render: (row) => {
+            switch (row.type) {
+              case 'string':
+                return h('span', row.string)
+              case 'expression':
+                return h('span', row.expression)
+              case 'implementation':
+                return h('span', row.implementation)
+              case 'stringValue':
+                return h('span', row.stringValue)
+              default:
+                return h('span', row.value)
+            }
+          }
+        },
         {
           title: t('panel.operations'),
           key: 'action',
@@ -301,6 +318,7 @@
           ...(value === 'script' ? { script: newListener.value.script || {} } : {})
         }
       }
+
       const updateScriptType = (value: string) => {
         formItemVisible.value.scriptType = value
         newListener.value.script = {
@@ -313,7 +331,7 @@
         // 重置字段表单
         newField.value = {
           name: '',
-          type: 'String',
+          type: 'string',
           value: ''
         };
         addFieldModalVisible.value = true;
@@ -340,22 +358,16 @@
           case 'expression':
             fieldData.expression = newField.value.value;
             break;
-          case 'integer':
-            fieldData.integer = newField.value.value;
+          case 'implementation':
+            fieldData.implementation = newField.value.value;
             break;
-          case 'long':
-            fieldData.long = newField.value.value;
-            break;
-          case 'double':
-            fieldData.double = newField.value.value;
-            break;
-          case 'boolean':
-            fieldData.boolean = newField.value.value;
+          case 'stringValue':
+            fieldData.stringValue = newField.value.value;
             break;
           default:
             fieldData.string = newField.value.value;
         }
-        fieldData.string=newField.value.value;
+
         // 添加到字段列表
         if (!newListener.value.fields) {
           newListener.value.fields = [];
@@ -367,9 +379,7 @@
       };
 
       const removeField = (index: number) => {
-        if (newListener.value.fields) {
-          newListener.value.fields.splice(index, 1);
-        }
+        newListener.value.fields.splice(index, 1);
       };
 
       const reloadExtensionListeners = () => {
@@ -391,7 +401,7 @@
               : {}),
             type: getExecutionListenerType(item),
             fields: item.fields || [] // 加载字段
-               })
+          })
         )
         listeners.value = JSON.parse(JSON.stringify(list))
       }
@@ -412,7 +422,6 @@
 
       const openListenerModel = async (index: number, listenerData?: ExecutionListenerForm) => {
         activeIndex = index
-        console.log(JSON.stringify(listenerData))
         listenerData && (newListener.value = JSON.parse(JSON.stringify(listenerData)))
         updateListenerType(listenerData?.type || 'class')
         modelVisible.value = true

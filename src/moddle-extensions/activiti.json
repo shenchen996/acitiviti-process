@@ -681,6 +681,9 @@
         {
           "name": "expression",
           "type": "String"
+        },{
+          "name": "implementation",
+          "type": "String"
         },
         {
           "name": "stringValue",
@@ -695,13 +698,6 @@
           "type": "Field",
           "isMany": true
         }
-      ]
-    },
-    {
-      "name": "String",
-      "superClass": ["Element"],
-      "properties": [
-        { "name": "value", "type": "String", "isAttr": true }
       ]
     },
     {

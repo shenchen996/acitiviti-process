@@ -136,18 +136,18 @@ function updateListenerProperty(
     const moddle = modeler().getModdle;
     const fieldElements = fields.map(field => {
       const fieldElement = moddle!.create(`${prefix}:Field`, {
-        name: field.name
+        name: field.name,
+        [field.type.toLowerCase()]: field[field.type.toLowerCase()]
       });
-      const stringElement = ['1'].map(i=>{ return moddle!.create(`${prefix}:${field.type}`, {
-        value: field[field.type]
-      })
-    })
-
-      fieldElement.set('fields', stringElement)
+    //   const stringElement = moddle!.create(`${prefix}:${field.type}`, {
+    //     value: field[field.type.toLowerCase()]
+    // })
+    //
+    //   fieldElement.set('fields', [stringElement])
 
       return fieldElement;
     });
-
+debugger
     listener.set('fields', fieldElements);
   }
 }
